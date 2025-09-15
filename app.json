@@ -8,6 +8,7 @@
     "scheme": "expocalendar",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "entryPoint": "./src/app/index.tsx",
     "ios": {
       "supportsTablet": true
     },
