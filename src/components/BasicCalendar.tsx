@@ -6,7 +6,7 @@ const today = toDateId(new Date());
 export function BasicCalendar() {
   const [selectedDate, setSelectedDate] = useState(today);
   return (
-    <View>
+    <View className="bg-gray-700">
       <Text>Selected date: {selectedDate}</Text>
       <Calendar
         calendarActiveDateRanges={[
