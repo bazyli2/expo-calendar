@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import { BasicCalendar } from "../components/BasicCalendar";
 import "../global.css";
 import { useState } from "react";
@@ -17,8 +17,9 @@ export default function Index() {
         // backgroundColor: "black",
       }}
     >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
       <BasicCalendar
+        calendarFormatLocale="pl-PL"
+        calendarFirstDayOfWeek="monday"
         calendarActiveDateRanges={[
           {
             startId: selectedDate,
