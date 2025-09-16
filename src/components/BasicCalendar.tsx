@@ -1,23 +1,17 @@
-import { Calendar, toDateId } from "@marceloterreiro/flash-calendar";
+import {
+  Calendar,
+  CalendarProps,
+  toDateId,
+  useCalendar,
+} from "@marceloterreiro/flash-calendar";
 import { useState } from "react";
 import { Text, View } from "react-native";
 
-const today = toDateId(new Date());
-export function BasicCalendar() {
-  const [selectedDate, setSelectedDate] = useState(today);
+export function BasicCalendar(props: CalendarProps) {
+  const { calendarRowMonth } = useCalendar(props);
   return (
-    <View className="bg-gray-700">
-      <Text>Selected date: {selectedDate}</Text>
-      <Calendar
-        calendarActiveDateRanges={[
-          {
-            startId: selectedDate,
-            endId: selectedDate,
-          },
-        ]}
-        calendarMonthId={today}
-        onCalendarDayPress={setSelectedDate}
-      />
+    <View>
+      <Text>{calendarRowMonth}</Text>
     </View>
   );
 }

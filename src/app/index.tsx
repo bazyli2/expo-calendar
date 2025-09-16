@@ -1,8 +1,13 @@
 import { Text, View } from "react-native";
 import { BasicCalendar } from "../components/BasicCalendar";
 import "../global.css";
+import { useState } from "react";
+import { toDateId } from "@marceloterreiro/flash-calendar";
+
+const today = toDateId(new Date());
 
 export default function Index() {
+  const [selectedDate, setSelectedDate] = useState(today);
   return (
     <View
       style={{
@@ -13,7 +18,16 @@ export default function Index() {
       }}
     >
       <Text>Edit app/index.tsx to edit this screen.</Text>
-      <BasicCalendar />
+      <BasicCalendar
+        calendarActiveDateRanges={[
+          {
+            startId: selectedDate,
+            endId: selectedDate,
+          },
+        ]}
+        calendarMonthId={today}
+        onCalendarDayPress={setSelectedDate}
+      />
     </View>
   );
 }
