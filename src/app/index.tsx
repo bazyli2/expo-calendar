@@ -1,13 +1,13 @@
-import { View } from "react-native";
+import { Text, View } from "react-native";
 import { BasicCalendar } from "../components/BasicCalendar";
 import "../global.css";
 import { useState } from "react";
 import { toDateId } from "@marceloterreiro/flash-calendar";
+import Carousel from "../components/Carousel";
 
 const today = toDateId(new Date());
 
 export default function Index() {
-  const [selectedDate, setSelectedDate] = useState(today);
   return (
     <View
       style={{
@@ -17,17 +17,9 @@ export default function Index() {
         // backgroundColor: "black",
       }}
     >
-      <BasicCalendar
-        calendarFormatLocale="pl-PL"
-        calendarFirstDayOfWeek="monday"
-        calendarActiveDateRanges={[
-          {
-            startId: selectedDate,
-            endId: selectedDate,
-          },
-        ]}
-        calendarMonthId={today}
-        onCalendarDayPress={setSelectedDate}
+      <Carousel
+        renderItem={(item) => <Text>{item.item.id}</Text>}
+        data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
       />
     </View>
   );
