@@ -3,7 +3,7 @@ import { BasicCalendar } from "../components/BasicCalendar";
 import "../global.css";
 import { useState } from "react";
 import { toDateId } from "@marceloterreiro/flash-calendar";
-import Carousel from "../components/Carousel";
+import { Carousel } from "../components/Carousel";
 
 const today = toDateId(new Date());
 

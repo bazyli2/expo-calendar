@@ -11,10 +11,9 @@ import Animated, {
   useAnimatedStyle,
   useDerivedValue,
   withSpring,
-  interpolate,
-  Extrapolate,
-  SharedValue,
 } from "react-native-reanimated";
+import { CarouselItem, RenderItem } from "./types";
+import { Slide } from "./Slide";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -27,85 +26,16 @@ const springConfig = {
   restSpeedThreshold: 0.5,
 };
 
-type CarouselItem = { id?: string | number } & Record<string, any>;
-
 interface CarouselProps {
   data: CarouselItem[];
-  renderItem: (params: {
-    item: CarouselItem;
-    index: number;
-  }) => React.ReactNode;
+  renderItem: RenderItem;
   itemWidth?: number;
   itemSpacing?: number;
   initialIndex?: number;
   height?: number;
 }
 
-interface SlideProps {
-  item: CarouselItem;
-  index: number;
-  itemWidth: number;
-  itemSpacing: number;
-  translateX: SharedValue<number>;
-  snapStep: number;
-  renderItem: CarouselProps["renderItem"];
-}
-
-function Slide({
-  item,
-  index,
-  itemWidth,
-  itemSpacing,
-  translateX,
-  snapStep,
-  renderItem,
-}: SlideProps) {
-  const animatedStyle = useAnimatedStyle(() => {
-    const offset = (translateX.value + index * snapStep) / snapStep;
-
-    const scale = interpolate(
-      offset,
-      [-2, -1, 0, 1, 2],
-      [0.85, 0.92, 1, 0.92, 0.85],
-      Extrapolate.CLAMP,
-    );
-
-    const opacity = interpolate(
-      Math.abs(offset),
-      [0, 1, 2],
-      [1, 0.8, 0.6],
-      Extrapolate.CLAMP,
-    );
-
-    const translateY = interpolate(
-      Math.abs(offset),
-      [0, 1, 2],
-      [0, 10, 20],
-      Extrapolate.CLAMP,
-    );
-
-    return {
-      transform: [{ scale }, { translateY }],
-      opacity,
-      width: itemWidth,
-    };
-  }, [itemWidth, itemSpacing, snapStep]);
-
-  return (
-    <Animated.View
-      key={String(item.id ?? index)}
-      style={[
-        styles.slide,
-        { left: index * snapStep, width: itemWidth },
-        animatedStyle,
-      ]}
-    >
-      {renderItem({ item, index })}
-    </Animated.View>
-  );
-}
-
-export default function CarouselReanimatedFixed({
+export function Carousel({
   data,
   renderItem,
   itemWidth = SCREEN_WIDTH * 0.85,
