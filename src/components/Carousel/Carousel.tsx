@@ -48,6 +48,7 @@ export function Carousel({
 
   const translateX = useSharedValue(-initialIndex * snapStep);
   const startX = useSharedValue(0); // acts as gesture context
+  const startIndex = useSharedValue(initialIndex);
 
   const currentIndex = useDerivedValue(() => {
     const raw = -translateX.value / snapStep;
@@ -79,24 +80,45 @@ export function Carousel({
     .onStart(() => {
       // store starting translate in gesture context
       startX.value = translateX.value;
+      startIndex.value = Math.round(-startX.value / snapStep);
     })
     .onUpdate((event) => {
       // update shared value directly on UI thread
       translateX.value = startX.value + event.translationX;
     })
     .onEnd((event) => {
-      // velocity-aware snap to nearest index
       const velocity = event.velocityX;
-      const rawIndex = -translateX.value / snapStep;
-      let nextIndex = Math.round(rawIndex - velocity * 0.0005);
+      const translation = event.translationX;
 
+      // thresholds: tweak to taste
+      const translationThreshold = snapStep / 4; // must swipe at least 1/4 of a step
+      const velocityThreshold = 800; // fling faster than this
+
+      // determine direction: -1 = previous, 0 = stay, 1 = next
+      let dir = 0;
+      if (translation < -translationThreshold || velocity < -velocityThreshold)
+        dir = 1;
+      else if (
+        translation > translationThreshold ||
+        velocity > velocityThreshold
+      )
+        dir = -1;
+
+      // compute next index relative to the index at the start of the gesture
+      let nextIndex = startIndex.value + dir;
+
+      // clamp
       if (nextIndex < 0) nextIndex = 0;
       if (nextIndex > data.length - 1) nextIndex = data.length - 1;
 
       const dest = -nextIndex * snapStep;
-      translateX.value = withSpring(dest, { ...springConfig, velocity }, () => {
-        // optional runOnJS callback after spring finishes
-        // runOnJS(someCallback)(nextIndex);
+
+      // IMPORTANT: don't pass the raw velocity into withSpring here (it can cause
+      // the spring to overshoot multiple steps). Use a stable spring to land exactly
+      // on the destination.
+      translateX.value = withSpring(dest, {
+        ...springConfig,
+        overshootClamping: true,
       });
     });
 
