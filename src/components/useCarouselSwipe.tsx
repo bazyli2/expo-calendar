@@ -13,5 +13,5 @@ export function useCarouselSwipe() {
       translateX.value = startX.value + event.translationX;
     });
 
-  return { gesture: pan, translateX: translateX } as const;
+  return { gesture: pan, translateX } as const;
 }
