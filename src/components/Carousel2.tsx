@@ -1,13 +1,10 @@
 import { Text, View, Dimensions } from "react-native";
 import {
-  Gesture,
   GestureDetector,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
+import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import { useCarouselSwipe } from "./useCarouselSwipe";
 
 const items = [1, 2] as const;
 
@@ -16,16 +13,7 @@ const itemWidth = Math.round(Dimensions.get("screen").width);
 const totalWidth = itemWidth * items.length;
 
 export function Carousel() {
-  const startX = useSharedValue(0);
-  const translateX = useSharedValue(0);
-
-  const pan = Gesture.Pan()
-    .onStart(() => {
-      startX.value = translateX.value;
-    })
-    .onUpdate((event) => {
-      translateX.value = startX.value + event.translationX;
-    });
+  const { gesture, translateX } = useCarouselSwipe();
 
   const containerStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }],
@@ -33,7 +21,7 @@ export function Carousel() {
 
   return (
     <GestureHandlerRootView>
-      <GestureDetector gesture={pan}>
+      <GestureDetector gesture={gesture}>
         <View
           style={{ width: itemWidth }}
           className="overflow-hidden border-solid border-red-50 border-2"
