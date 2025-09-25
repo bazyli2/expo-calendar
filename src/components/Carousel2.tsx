@@ -11,7 +11,9 @@ import Animated, {
 
 const items = [1, 2] as const;
 
-const screenWidth = Math.round(Dimensions.get("screen").width);
+const itemWidth = Math.round(Dimensions.get("screen").width);
+
+const totalWidth = itemWidth * items.length;
 
 export function Carousel() {
   const startX = useSharedValue(0);
@@ -19,11 +21,9 @@ export function Carousel() {
 
   const pan = Gesture.Pan()
     .onStart(() => {
-      console.log("pan start");
       startX.value = translateX.value;
     })
     .onUpdate((event) => {
-      console.log("pan update");
       translateX.value = startX.value + event.translationX;
     });
 
@@ -34,22 +34,27 @@ export function Carousel() {
   return (
     <GestureHandlerRootView>
       <GestureDetector gesture={pan}>
-        <Animated.View
-          className="min-h-40 bg-slate-100"
-          style={[{ width: screenWidth }, containerStyle]}
+        <View
+          style={{ width: itemWidth }}
+          className="overflow-hidden border-solid border-red-50 border-2"
         >
-          {items.map((item, index) => {
-            return (
-              <View
-                key={item}
-                className="absolute top-0 w-full h-full"
-                style={{ left: screenWidth * index * -1 }}
-              >
-                <Text>{item}</Text>
-              </View>
-            );
-          })}
-        </Animated.View>
+          <Animated.View
+            className="min-h-40 bg-slate-100"
+            style={[{ width: totalWidth }, containerStyle]}
+          >
+            {items.map((item, index) => {
+              return (
+                <View
+                  key={item}
+                  className="absolute top-0 w-full h-full"
+                  style={{ left: itemWidth * index }}
+                >
+                  <Text>{item}</Text>
+                </View>
+              );
+            })}
+          </Animated.View>
+        </View>
       </GestureDetector>
     </GestureHandlerRootView>
   );
