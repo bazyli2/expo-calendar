@@ -5,6 +5,7 @@ import {
 } from "react-native-gesture-handler";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 import { useCarouselSwipe } from "./useCarouselSwipe";
+import { Slide } from "./Slide";
 
 const items = [1, 2] as const;
 
@@ -32,13 +33,9 @@ export function Carousel() {
           >
             {items.map((item, index) => {
               return (
-                <View
-                  key={item}
-                  className="absolute top-0 w-full h-full"
-                  style={{ left: itemWidth * index }}
-                >
+                <Slide key={item} index={index} itemWidth={itemWidth}>
                   <Text>{item}</Text>
-                </View>
+                </Slide>
               );
             })}
           </Animated.View>
