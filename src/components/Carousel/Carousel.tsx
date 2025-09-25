@@ -1,4 +1,4 @@
-import { Dimensions } from "react-native";
+import { Dimensions, Text } from "react-native";
 import {
   GestureDetector,
   GestureHandlerRootView,
@@ -13,10 +13,19 @@ const itemWidth = Math.round(Dimensions.get("screen").width);
 export function Carousel() {
   const { gesture, translateX } = useCarouselSwipe();
 
+  const renderItem = (item: number) => {
+    return <Text>{item}</Text>;
+  };
+
   return (
     <GestureHandlerRootView>
       <GestureDetector gesture={gesture}>
-        <Slides items={items} translateX={translateX} itemWidth={itemWidth} />
+        <Slides
+          items={items}
+          translateX={translateX}
+          itemWidth={itemWidth}
+          renderItem={renderItem}
+        />
       </GestureDetector>
     </GestureHandlerRootView>
   );

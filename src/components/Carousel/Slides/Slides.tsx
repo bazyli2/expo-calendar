@@ -3,10 +3,11 @@ import Animated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 import { Slide } from "./Slide";
-import { Text, View } from "react-native";
+import { View } from "react-native";
+import { ReactNode } from "react";
 
-export function Slides(props: Props) {
-  const { translateX, items, itemWidth } = props;
+export function Slides<T>(props: Props<T>) {
+  const { translateX, items, itemWidth, renderItem } = props;
 
   const totalWidth = itemWidth * items.length;
 
@@ -25,8 +26,8 @@ export function Slides(props: Props) {
       >
         {props.items.map((item, index) => {
           return (
-            <Slide key={item} index={index} itemWidth={itemWidth}>
-              <Text>{item}</Text>
+            <Slide key={index} index={index} itemWidth={itemWidth}>
+              {renderItem(item)}
             </Slide>
           );
         })}
@@ -35,8 +36,9 @@ export function Slides(props: Props) {
   );
 }
 
-interface Props {
+interface Props<T> {
   translateX: SharedValue<number>;
   itemWidth: number;
-  items: number[];
+  items: T[];
+  renderItem: (item: T) => ReactNode;
 }
