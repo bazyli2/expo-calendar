@@ -1,11 +1,6 @@
 import { Text, View } from "react-native";
-import { BasicCalendar } from "../components/BasicCalendar";
 import "../global.css";
-import { useState } from "react";
-import { toDateId } from "@marceloterreiro/flash-calendar";
-import { Carousel } from "../components/Carousel2";
-
-const today = toDateId(new Date());
+import { Carousel } from "../components/Carousel";
 
 export default function Index() {
   return (
